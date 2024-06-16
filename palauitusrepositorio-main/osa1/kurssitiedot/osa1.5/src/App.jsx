@@ -71,7 +71,7 @@ const App = () => {
       <Content 
       name1 = {course.parts[0].name} ex1 = {course.parts[0].exercises}
       name2 = {course.parts[1].name} ex2 = {course.parts[1].exercises}
-      name3 = {course.parts[2].name} ex3 = {course.parts[2].exercises}
+      name3 = {course.parts[2].name} ex3 = {course.parts[2].exercises} 
       />
 
       <Total 
