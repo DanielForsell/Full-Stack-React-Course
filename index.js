@@ -3,26 +3,30 @@ const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
 
-app.use(cors())
-app.use(express.static('dist'))
+let persons = [
+    {
+        id: 1,
+        name: "Arto Hellas",
+        number: "040-123456"
+    },
+    {
+        id: 2,
+        name: "Ada Lovelace",
+        number: "39-44-5323523"
+    },
+    {
+        id: 3,
+        name: "Dan Abramov",
+        number: "12-43-234345"
+    },
+    {
+        id: 4,
+        name: "Mary Poppendieck",
+        number: "39-23-6423122"
+    },
+  ]
 
-let notes = [
-  {
-    id: 1,
-    content: "HTML is easy",
-    important: true
-  },
-  {
-    id: 2,
-    content: "Browser can execute only JavaScript",
-    important: false
-  },
-  {
-    id: 3,
-    content: "GET and POST are the most important methods of HTTP protocol",
-    important: true
-  }
-]
+  app.use(cors())
 
   app.use(express.json())
 
@@ -39,18 +43,18 @@ let notes = [
     response.send('Phonebook has info for ' + persons.length + ' people<br>' + new Date())
   })
   
-  app.get('/api/notes', (request, response) => {
-    response.json(notes)
+  app.get('/api/persons', (request, response) => {
+    response.json(persons)
     app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
   })
 
-  app.get('/api/notes/:id', (request, response) => {
+  app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
     
-    const note = notes.find(persons => persons.id === id)
-    console.log(note);
-    if (note) {
-        response.json(note)
+    const person = persons.find(persons => persons.id === id)
+    console.log(person);
+    if (person) {
+        response.json(person)
       } else {
         return response.status(400).json({ 
         error: 'content missing'
@@ -59,46 +63,46 @@ let notes = [
       app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
   })
 
-  app.delete('/api/notes/:id', (request, response) => {
+  app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    notes = notes.filter(note => note.id !== id)
+    persons = persons.filter(person => person.id !== id)
   
     response.status(204).end()
     app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
   })
 
   const generateId = () => {
-    const maxId = notes.length > 0
-      ? Math.max(...notes.map(n => n.id))
+    const maxId = persons.length > 0
+      ? Math.max(...persons.map(n => n.id))
       : 0
     return maxId + 1
   }
   
-  app.post('/api/notes', (request, response) => {
+  app.post('/api/persons', (request, response) => {
     const body = request.body
   
-    if (!body.name) {
+    if (!body.name || !body.number) {
       return response.status(400).json({ 
         error: 'content missing' 
       })
-    } else if (notes.find(note => note.name === note.name)) {
+    } else if (persons.find(person => person.name === body.name)) {
 
         return response.status(400).json({
             error: 'name must be unique'
         })
     }
   
-    const note = {
+    const person = {
         id: generateId(),
-        content: body.name,
-        important: body.important || false
+        name: body.name,
+        number: body.number
       
     }
   
-    notes = notes.concat(note)
+    persons = persons.concat(person)
   
     app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
-    response.json(notes)
+    response.json(persons)
   })
 
 //   const requestLogger = (request, response, next) => {
