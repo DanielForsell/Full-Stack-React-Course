@@ -16,4 +16,6 @@ osa2
 Hakemistoon kannattaa sijoittaa koko tehtäväsarjan react-projekti lukuunottamatta riippuvuuksia sisältävää hakemistoa <i>node\_modules</i>
 
 
-Internetissä oleva sovellus tulipoistettua jälkeen päin, mutta luon uuden.
+Internetissä oleva sovellus 
+
+https://full-stack-react-course.onrender.com
