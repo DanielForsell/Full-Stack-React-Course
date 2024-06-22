@@ -14,7 +14,7 @@ const App = () => {
   const [showAll, setShowAll] = useState('')
   const [errorMessage, setErrorMessage] = useState('some error happened...')
 
-  
+
 
   const hook = () => {
     console.log('effect')
@@ -37,7 +37,7 @@ const App = () => {
     if (persons.some(person => person.name === newName)) {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
 
-        
+
 
         const person = persons.find(person => person.name === newName)
         const changedPerson = { ...person, number: newNumber }
@@ -45,32 +45,33 @@ const App = () => {
         servicePersons.update(changedPerson.id, changedPerson).then(newPerson => {
 
           console.log('updated person')
-          setPersons(persons.map(person => person.id !== changedPerson.id ? person : newPerson)
+          setPersons(persons.map(person => person.id !== changedPerson.id ? person : newPerson))
+        }).catch(error => {
+        console.log('Update error')
+        // setErrorMessage(`Error: ${error.response.data.error}`)
 
-          
-          
-          )
-        }
-        )
+      })
 
         if (persons.some(person => person.name !== newName)) {
           setErrorMessage(`Person ${newName} is already been removed from server`)
           hook()
-          return
-        }
-        
-        setErrorMessage(`Updated person: ${person.name}`)
-        
           setTimeout(() => {
 
             setErrorMessage(null)
           }, 3000);
+          return
+        }
+
+        setErrorMessage(`Updated person: ${person.name}`)
+
+        setTimeout(() => {
+
+          setErrorMessage(null)
+        }, 3000);
       }
 
       return
     }
-
-
 
     const personObject = {
       name: newName,
@@ -81,18 +82,19 @@ const App = () => {
       console.log('new Person added')
       setPersons(persons.concat(newPerson))
       setErrorMessage(`Added new person: ${newPerson.name}`)
-      .catch(error => {
-        console.log('error')
-        setErrorMessage(`Error: ${error.response.data.error}`)
-      })
       
-
       setTimeout(() => {
         setErrorMessage(null)
       }, 3000);
 
+    }).catch(error => {
+      console.log('error creating new person')
+      setErrorMessage(error.response.data.error)
     })
 
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 3000);
     setNewName('')
     setNewNumber('')
   }
@@ -105,7 +107,7 @@ const App = () => {
         setPersons(persons.filter(person => person.id !== id))
 
         setErrorMessage(`Deleted person by id: ${id}`)
-        
+
         setTimeout(() => {
           setErrorMessage(null)
         }, 3000);
@@ -135,7 +137,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={errorMessage}/>
+      <Notification message={errorMessage} />
       <Filter handlePersonShow={handlePersonShow} />
 
       <h3>Add a new</h3>
