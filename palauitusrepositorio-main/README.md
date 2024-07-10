@@ -17,5 +17,4 @@ Hakemistoon kannattaa sijoittaa koko tehtäväsarjan react-projekti lukuunottama
 
 
 Internetissä oleva sovellus 
-
 https://full-stack-react-course.onrender.com

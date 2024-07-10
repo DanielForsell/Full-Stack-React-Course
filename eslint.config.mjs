@@ -8,7 +8,10 @@ export default {
   "overrides": [
       {
           "env": {
-              "node": true
+              'commonjs': true,
+                'es2021': true,
+                'node': true,
+                'jest': true,
           },
           "files": [
               ".eslintrc.{js,cjs}"

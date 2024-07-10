@@ -43,6 +43,35 @@ const App = () => {
 
   const addNote = (event) => {
     event.preventDefault()
+
+    if(notes.some(note => note.title === newTitle)) {
+      setErrorMessage('Title is already in the list, updating it with new content')
+
+      const note = notes.find(note => note.title === newTitle)
+      const changedNote = { ...note, author: newAuthor, url: newURL, votes: newVotes }
+
+      noteService.update(note.id, changedNote).then(response => {
+        setNotes(notes.map(note => note.id !== response.id ? note : response))
+        setNewAuthor('')
+        setNewTitle('')
+        setNewURL('')
+        setNewVotes('')
+
+      }).catch(error => {
+        setErrorMessage(
+          `Article '${note.title}' was already removed from server`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000);
+        setNotes(notes.filter(n => n.id !== note.id))
+      })
+
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000);
+    }
+
     const noteObject = {
       author: newAuthor,
       title: newTitle,
@@ -60,6 +89,26 @@ const App = () => {
         setNewURL('')
         setNewVotes('')
       })
+  }
+
+
+  const deleteArticle = (id) => {
+    console.log('deleting article by id: ', id);
+    if (window.confirm(`Are you sure that you want to delete article by id: ${id}?`)) {
+      noteService.deleteArticle(id).then(response => {
+        console.log('deleted person')
+        setNotes(notes.filter(note => note.id !== id))
+
+        setErrorMessage(`Deleted person by id: ${id}`)
+
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000);
+
+      })
+    }
+
+
   }
 
   const handleAuthorChange = (event) => {
@@ -82,7 +131,7 @@ const App = () => {
     setNewVotes(event.target.value)
   }
 
-  const Note = ({ note, toggleImportance }) => {
+  const Note = ({ note, toggleImportance, deleteArticle }) => {
     const label = note.important
       ? 'make not important' : 'make important'
   
@@ -91,6 +140,7 @@ const App = () => {
         Author: {note.author} Title: {note.title} URL: {note.url} Votes: {note.votes} <br />
         
         <button onClick={toggleImportance}>{label}</button>
+        <button onClick={deleteArticle}>Delete</button>
       </div>
     )
   }
@@ -149,7 +199,8 @@ const App = () => {
           <Note 
           key={note.id} 
           note={note}
-          toggleImportance={() => toggleImportanceOf(note.id)} />
+          toggleImportance={() => toggleImportanceOf(note.id)} 
+          deleteArticle={() => deleteArticle(note.id)}/>
         )}
       </ul>
 
