@@ -9,7 +9,6 @@ const useStatisticsStore = create(set => ({
         addGood: () => set(state => ({good: state.good + 1})),
         addNeutral: () => set(state => ({neutral: state.neutral + 1})),
         addBad: () => set(state => ({bad: state.bad + 1}))
-
     }
 }))
 
